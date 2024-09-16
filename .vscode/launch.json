@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "user.action.App",
             "projectName": "app",
-            "vmArgs": "--add-exports java.base/sun.nio.ch=ALL-UNNAMED"
+            // "vmArgs": "--add-exports java.base/sun.nio.ch=ALL-UNNAMED"
         }
     ]
 }
