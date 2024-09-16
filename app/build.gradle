@@ -28,12 +28,12 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
 
 application {
-    mainClass = 'user.action.App'
+    mainClass = 'user.UserActivityETL'
 }
 
 tasks.named('test') {
