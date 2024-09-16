@@ -1,15 +1,13 @@
 package user;
-import static org.apache.spark.sql.functions.e;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Properties;
 //spark
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import static org.apache.spark.sql.functions.*;
 
 public class UserActivityETL{
 
@@ -44,7 +42,25 @@ public class UserActivityETL{
 
         //check hive connection
         Dataset<Row> tables = spark.sql("SHOW TABLES");
-        tables.show();
+        tables.show(); 
+
+        // read raw file
+        String filePath = "file:///home/project/data/2019-Oct.csv";
+        Dataset<Row> df = spark.read()
+                .format("csv")
+                .option("header", "true")
+                .option("inferSchema", "true")  // 스키마 자동 유추
+                .load(filePath);
+
+        // Convert event_time from UTC to KST(event_time_kst)
+        df = df.withColumn("event_time_kst", from_utc_timestamp(col("event_time"), "Asia/Seoul"));
+
+        // Extract year, month, day based on KST
+        df = df.withColumn("year", year(col("event_time_kst")))
+        .withColumn("month", month(col("event_time_kst")))
+        .withColumn("day", dayofmonth(col("event_time_kst")));
+
+        df.show(1); 
 
         // close Spark session
         spark.stop();
