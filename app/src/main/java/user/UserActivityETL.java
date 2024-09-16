@@ -29,7 +29,8 @@ public class UserActivityETL{
         String hdfsUrl = properties.getProperty("hdfs.url");
         String hiveMetastoreUrl = properties.getProperty("hive.metastore.url");
         String hiveWarehouseUrl = properties.getProperty("hive.warehouse.url");
-    
+        String hiveExternalUrl = properties.getProperty("hive.external.url");
+
         //SparkSession
         SparkSession spark = SparkSession.builder()
                 .appName("CSV to Hive")
@@ -61,6 +62,36 @@ public class UserActivityETL{
         .withColumn("day", dayofmonth(col("event_time_kst")));
 
         df.show(1); 
+
+        // Create External Hive Table if not exists
+        String tableName = "user_activity";
+        String outputPath = hiveExternalUrl;
+
+        // Write data partitioned by year/month/day
+        df.write()
+         .mode(SaveMode.Overwrite)
+         .partitionBy("year", "month", "day")
+         .format("parquet")
+         .option("compression", "snappy")
+         .save(outputPath ); 
+        
+        //Create External table If not exists
+        String createTableQuery = "CREATE EXTERNAL TABLE IF NOT EXISTS " + tableName + " (\n" +
+        "  event_time_kst TIMESTAMP,\n" +
+        "  event_type STRING,\n" +
+        "  product_id STRING,\n" +
+        "  category_id STRING,\n" +
+        "  category_code STRING,\n" +
+        "  brand STRING,\n" +
+        "  price DOUBLE,\n" +
+        "  user_id STRING,\n" +
+        "  user_session STRING\n" +
+        ") PARTITIONED BY (year INT, month INT, day INT)\n" +
+        "STORED AS PARQUET\n" +
+        "LOCATION '" + outputPath + "'";
+ 
+        spark.sql(createTableQuery);
+        spark.sql("MSCK REPAIR TABLE " + tableName);
 
         // close Spark session
         spark.stop();
