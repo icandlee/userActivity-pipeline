@@ -6,17 +6,26 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
+            "name": "UserActivityETL",
             "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": "user.UserActivityETL",
+            "projectName": "app"
         },
         {
             "type": "java",
-            "name": "App",
+            "name": "UserActivityETL",
             "request": "launch",
-            "mainClass": "user.action.App",
-            "projectName": "app",
-            // "vmArgs": "--add-exports java.base/sun.nio.ch=ALL-UNNAMED"
+            "mainClass": "user.UserActivityETL",
+            "projectName": "app_",
+            "args": [
+                "2019-10-01",
+                "2019-10-31"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
         }
-    ]
-}
+    ]}
