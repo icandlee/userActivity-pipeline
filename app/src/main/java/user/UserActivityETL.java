@@ -12,20 +12,26 @@ import static org.apache.spark.sql.functions.*;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path; 
 import org.apache.hadoop.fs.FileUtil;
-
+//logger
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 public class UserActivityETL{
 
+    private static final Logger logger =Logger.getLogger(UserActivityETL.class); 
+
     public static void main(String[] args) {
+        logger.setLevel(Level.INFO); // 로그 레벨 설정
 
         //Check input parameters
-        if (args.length < 2) {
-            System.err.println("Usage: UserActivityETL <start_date> <end_date>");
-            System.exit(1);
-        }
-
-        String startDate = args[0];    // e.g., "2019-10-01"
-        String endDate = args[1];      // e.g., "2019-10-31" 
+        // if (args.length < 2) {
+        //     System.err.println("args: UserActivityETL <start_date> <end_date>");
+        //     System.exit(1);
+        // }
+        String startDate ="2019-10-01";
+        //String endDate = args[1];      // e.g., "2019-10-31" 
 
         //load config.properties
         Properties properties = new Properties();
@@ -108,8 +114,8 @@ public class UserActivityETL{
                 // 임시 경로 삭제
                 fs.delete(srcPath, true);
             } else {
-                // 실패 처리
-                System.err.println("Failed to move files from " + tempOutputPath + " to " + outputPath);
+                //log
+                logger.error("Failed to move files from " + tempOutputPath + " to " + outputPath);
             }
 
             //Create External table If not exists
@@ -131,11 +137,13 @@ public class UserActivityETL{
             spark.sql("MSCK REPAIR TABLE " + tableName);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            //log
+            logger.error("Error occurred during batch job execution: ",e);
             System.exit(1);
         } finally {
             // close Spark session
             spark.stop();
+            logger.info("spark job finished.");
         }
     } 
     
