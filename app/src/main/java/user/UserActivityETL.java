@@ -38,6 +38,7 @@ public class UserActivityETL{
                 .config("spark.hadoop.fs.defaultFS", hdfsUrl)  
                 .config("hive.metastore.uris", hiveMetastoreUrl)
                 .config("spark.sql.warehouse.dir", hiveWarehouseUrl)
+                .config("spark.task.maxFailures", "4") // 작업 실패 시 재시도
                 .enableHiveSupport()
                 .getOrCreate();
 
@@ -63,7 +64,6 @@ public class UserActivityETL{
 
         df.show(1); 
 
-        // // Create External Hive Table if not exists
         String tableName = "user_activity";
         String outputPath = hiveExternalUrl;
 
