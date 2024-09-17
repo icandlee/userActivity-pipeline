@@ -42,15 +42,15 @@ public class UserActivityETL{
                 .getOrCreate();
 
         //check hive connection
-        Dataset<Row> tables = spark.sql("SHOW TABLES");
-        tables.show(); 
+        Dataset<Row> tables = spark.sql("SELECT * FROM user_activity LIMIT 3");
+        tables.show();
 
         // read raw file
         String filePath = "file:///home/project/data/2019-Oct.csv";
         Dataset<Row> df = spark.read()
                 .format("csv")
                 .option("header", "true")
-                .option("inferSchema", "true")  // 스키마 자동 유추
+                .option("inferSchema", "true")  
                 .load(filePath);
 
         // Convert event_time from UTC to KST(event_time_kst)
@@ -63,7 +63,7 @@ public class UserActivityETL{
 
         df.show(1); 
 
-        // Create External Hive Table if not exists
+        // // Create External Hive Table if not exists
         String tableName = "user_activity";
         String outputPath = hiveExternalUrl;
 
@@ -73,18 +73,18 @@ public class UserActivityETL{
          .partitionBy("year", "month", "day")
          .format("parquet")
          .option("compression", "snappy")
-         .save(outputPath ); 
+         .save(outputPath); 
         
         //Create External table If not exists
         String createTableQuery = "CREATE EXTERNAL TABLE IF NOT EXISTS " + tableName + " (\n" +
         "  event_time_kst TIMESTAMP,\n" +
         "  event_type STRING,\n" +
-        "  product_id STRING,\n" +
-        "  category_id STRING,\n" +
+        "  product_id INT,\n" +
+        "  category_id BIGINT,\n" +
         "  category_code STRING,\n" +
         "  brand STRING,\n" +
         "  price DOUBLE,\n" +
-        "  user_id STRING,\n" +
+        "  user_id INT,\n" +
         "  user_session STRING\n" +
         ") PARTITIONED BY (year INT, month INT, day INT)\n" +
         "STORED AS PARQUET\n" +
