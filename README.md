@@ -25,7 +25,7 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 │        │        │  ├─ HiveTableManager.java
 │        │        │  └─ UserActivityProcessor.java
 │        │        └─ utils
-│        │           └─ FileUtils.java
+│        │           └─ CheckPointManager.java
 │        └─ resources
 │           ├─ config.properties 
 │           └─ log4j2.xml
@@ -37,6 +37,7 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 - `UserActivityETL.java` : user activity ETL job을 수행하는 main 클래스
 - `config` : 데이터 입력/출력 경로 등 properties load 역할을 하는 패키지
 - `processing` : Hive external 테이블 생성 & 가공 및 적재 역할을 하는 패키지
+- `utils` : 공통 유틸을 포함하는 패키지 / CheckPointManager : chunk 분할 작업시 체크포인트 관리를 위한 클래스
 
 ## Features
 ### 1) KST 기준으로 daily partition 처리
@@ -54,7 +55,8 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 - 메인 실행시 args 첫 번째 인자로 데이터의 년,월 (ex.2019-10)받아서 처리
 
 ### 5) 배치 장애시 복구를 위한 장치 구현
-- Spark Streaming 방식 및 체크포인트로 장애 발생시 해당 지점부터 다시 처리 가능하도록 구현 
+- 대량의 데이터라는 가정하에 데이터를 chunk단위로 나누어 처리하고, 각 청크 처리후 checkPoint 파일에 chunk index 저장
+- 작업 실행시 checkPoint 파일을 읽어 마지막으로 처리된 chunk index 다음부터 이어서 처리하도록 구현
 
 ## Prerequisites
 - Java 8
@@ -63,10 +65,3 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 - Hadoop 3.3.6
 - PostgreSQL 15.2
 - Docker OS : Ubuntu 22.04 
-
-## Installation
-
-Install hive
-```bash
-
-```
