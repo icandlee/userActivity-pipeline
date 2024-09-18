@@ -32,6 +32,7 @@ public class UserActivityETL{
         String filePath = "file://" + properties.getProperty("userActivity.file.path") + "/" + targetDate + ".csv";
         //String iputFilePath = "file://" + filePath;
         String outputPath =  properties.getProperty("hive.external.url") + "/useractivity";
+        String checkPointPath =  properties.getProperty("hdfs.checkpoint.path");
         String tableName = "user_activity";
 
         //SparkSession
@@ -47,7 +48,7 @@ public class UserActivityETL{
 
         try {
             //process and load data
-            UserActivityProcessor.processData(spark, filePath, outputPath, tableName);
+            UserActivityProcessor.processData(spark, filePath, outputPath, checkPointPath, tableName);
             //create hive talbe if it is not exists
             HiveTableManager.createExternalTable(spark, outputPath, tableName);
         } catch (Exception e) {

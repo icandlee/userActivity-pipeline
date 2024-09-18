@@ -10,8 +10,8 @@ public class ConfigLoader {
     /**
      * config.properties 파일 (/main/resources)
      * 
-     * @param fileName config 파일명(ex.config.properties)
-     * @return Properties - properties 객체; 파일을 로드할 수 없는 경우 null을 반환
+     * @param fileName    config 파일명(ex.config.properties)
+     * @return            Properties : properties 객체; 파일을 로드할 수 없는 경우 null을 반환
      */
     
     public static Properties loadProperties(String fileName) {
