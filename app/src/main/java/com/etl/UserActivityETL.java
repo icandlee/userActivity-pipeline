@@ -1,20 +1,12 @@
 package com.etl;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-//spark
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.SparkSession;
-import static org.apache.spark.sql.functions.*;
+import org.apache.spark.sql.SparkSession; 
+import com.etl.config.ConfigLoader;
+import com.etl.processing.UserActivityProcessor;
+import com.etl.processing.HiveTableManager;
 //logger
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
-import java.io.File; 
-//class 
-import com.etl.config.ConfigLoader;
-import com.etl.processing.UserActivityProcessor; 
 
 /**
  * UserActivityETL 클래스 : user activity 데이터를 처리하고 HIVE 테이블에 적재하는 ETL 작업
@@ -54,7 +46,10 @@ public class UserActivityETL{
                 .getOrCreate();
 
         try {
+            //process and load data
             UserActivityProcessor.processFile(spark, filePath, outputPath, tableName);
+            //create hive talbe if it is not exists
+            HiveTableManager.createExternalTable(spark, outputPath, tableName);
         } catch (Exception e) {
             //log
             logger.error("Error occurred during batch job execution: ",e);
