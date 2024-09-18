@@ -47,7 +47,7 @@ public class UserActivityETL{
 
         try {
             //process and load data
-            UserActivityProcessor.processFile(spark, filePath, outputPath, tableName);
+            UserActivityProcessor.processData(spark, filePath, outputPath, tableName);
             //create hive talbe if it is not exists
             HiveTableManager.createExternalTable(spark, outputPath, tableName);
         } catch (Exception e) {

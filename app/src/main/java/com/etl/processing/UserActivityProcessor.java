@@ -18,8 +18,8 @@ public class UserActivityProcessor {
      * @param outputPath  테이블 데이터가 저장되는 HDFS 경로
      * @param tableName   태이블명(user_activity)
      */ 
-    
-    public static void processFile(SparkSession spark, String filePath, String outputPath, String tableName) {
+
+    public static void processData(SparkSession spark, String filePath, String outputPath, String tableName) {
 
         Dataset<Row> df = spark.read()
                 .format("csv")
