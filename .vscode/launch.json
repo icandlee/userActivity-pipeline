@@ -8,18 +8,20 @@
             "type": "java",
             "name": "UserActivityETL",
             "request": "launch",
-            "mainClass": "user.UserActivityETL",
-            "projectName": "app"
+            "mainClass": "com.etl.UserActivityETL",
+            "projectName": "app",
+            "args": [
+                "2019-10",
+            ]
         },
         {
             "type": "java",
             "name": "UserActivityETL",
             "request": "launch",
-            "mainClass": "user.UserActivityETL",
+            "mainClass": "com.etl.UserActivityETL",
             "projectName": "app_",
             "args": [
-                "2019-10-01",
-                "2019-10-31"
+                "2019-10",
             ]
         },
         {
