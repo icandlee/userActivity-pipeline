@@ -44,10 +44,10 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 - event_time_kst의 year, month, day를 기준으로 daily partition 처리
 
 ### 2) Hive External Table 방식 설계
-- 데이터 적재시 해당 테이블(user_activity)이 없을 경우 자동으로 생성하도록 spark sql로 처리하는 HiveTabeManager.java 클래스 구현
+- 데이터 적재시 테이블(user_activity)이 없을 경우 자동으로 생성하는 HiveTabeManager.java 클래스 구현
 
 ### 3) Data format - parquet, snappy 처리 
-- Hive 테이블 설계 및 데이터 저장시에 모두 적용
+- Hive 테이블 설계 및 데이터 저장시에 적용
 
 ### 4) 추가 기간 처리에 대응
 - Spark에서 DataFrame을 append 모드로 저장하여 기존 데이터 충돌 방지
