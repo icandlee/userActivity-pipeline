@@ -31,8 +31,7 @@ user activity 로그를 Spark, HDFS를 활용하여 Hive 테이블로 제공하�
 │           └─ log4j2.xml
 ├─ gradle
 └─ logs
-   ├─ spark-job-2024-09-17.log
-   └─ spark-job.log
+
 ```
 - `UserActivityETL.java` : user activity ETL job을 수행하는 main 클래스
 - `config` : 데이터 입력/출력 경로 등 properties load 역할을 하는 패키지
